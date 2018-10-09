@@ -1,6 +1,6 @@
 # The 3d World
 
-![](../videos/mapillary.gif)
+![](videos/mapillary.gif)
 
 ## About this Module
 This module is about the mathematics and code that makes 3d computer vision work. This portion of the field is enormous, with a long history, and huge body of literature. We'll hit key areas, and put them together in a fun challenge where you get to build your own 3d model. 
