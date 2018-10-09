@@ -28,13 +28,14 @@ As a student, you should be eligable for [$35-$100](https://aws.amazon.com/blogs
 3. For instance type, I've had good luck with **t2.medium**, I wasn't able to get the micro instance to install OpenSFM, I believe due to RAM limitations. 
 4. You will likely need to increase your default storage. 
 5. Follow Amazon instructions to access your instance via SSH.
+6. Create a new inbound rule under Security Groups for your instance. I've had good luck with allowing all traffic from all ports from my IP address. 
 
-### Installation on Ubuntu Linux
+### Installation + Running on Ubuntu Linux
 
 1. Copy over ubuntu_setup.sh from the util directory of this repo to your linux machine. If using service like EC2 via SSH, you may use SCP: 
 
 ```
-scp -i PATH-TO-KEY.pem PATH_TO_THIS_REPO/ubuntu_setup.sh ubuntu@ec2-XX-XXX-XXX-XXX.compute-1.amazonaws.com:/home/ubuntu
+scp -i PATH-TO-KEY.pem PATH_TO_THIS_REPO/the_3d_world/ubuntu_setup.sh ubuntu@ec2-XX-XXX-XXX-XXX.compute-1.amazonaws.com:/home/ubuntu
 ```
 
 where `XX-XXX-XXX-XXX` is the IP address of your instance. Note the dashes instead of dots. 
@@ -45,20 +46,71 @@ where `XX-XXX-XXX-XXX` is the IP address of your instance. Note the dashes inste
 sudo bash ubuntu_setup.sh 
 ```
 
-3. Clone OpenSFM to your machine:
+3. On your instance, clone OpenSFM to your machine:
 
 ```
 git clone https://github.com/mapillary/OpenSfM.git
 ```
 
-4. Move image to your instance. If working with remote instance, could use SCP here again, as a test, you may 
+4. Install requirements and build OpenSfM:
+
+```
+pip install -r requirements.txt
+python setup.py build
 
 ```
 
+5. Create a new OpenSfM data directory:
+
+```
+cd OpenSfM/data
+mkdir objects
 ```
 
+6. Move image to your instance from your local machine. If working with remote instance, could use SCP here again, as a test, you may want to move a set of brick/ball/cylinder images from the data directory:
 
+```
+scp -i PATH-TO-KEY.pem -r PATH_TO_THIS_REPO/the_3d_world/data/objects ubuntu@ec2-54-145-215-211.compute-1.amazonaws.com:/home/ubuntu/OpenSfM/data/objects/images
 
+```
+
+7. Copy over an exampel config file. From the OpenSfM/data directory:
+
+```
+cp berlin/config.yaml objects
+```
+
+8. Check out the yaml file. You'll need to make changes to this later:
+
+```
+cd objects
+nano config.yaml
+
+```
+
+9. Run the OpenSfM pipeline:
+
+```
+cd ~/OpenSfM
+bin/opensfm_run_all data/objects
+```
+
+10. Enjoy watching OpenSfM do a bunch of work for you. 
+
+11. Launch the OpenSfM server:
+
+```
+python -m SimpleHTTPServer
+```
+
+12. To view your map on your local machine, navigate your browser to 
+
+```
+http://XX.XXX.XXX.XXX:8000/viewer/reconstruction.html#file=/data/objects/reconstruction.meshed.json
+```
+
+### Jupyter Notebook from EC2
+You can also serve jupyter notebooks to your local machine from EC2s, [here's](https://medium.com/@alexjsanchez/python-3-notebooks-on-aws-ec2-in-15-mostly-easy-steps-2ec5e662c6c6) a guide. 
 
 
 ## Deliverables
