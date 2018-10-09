@@ -1,0 +1,5 @@
+tqdm >= 4.23.3
+wget >= 3.2
+matplotlib
+Pillow
+opencv-python
