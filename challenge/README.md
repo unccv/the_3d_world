@@ -32,30 +32,35 @@ As a student, you should be eligable for [$35-$100](https://aws.amazon.com/blogs
 
 ### Installation + Running on Ubuntu Linux
 
-1. Copy over ubuntu_setup.sh from the util directory of this repo to your linux machine. If using service like EC2 via SSH, you may use SCP: 
+**After SSHing into your instance, execute the following commands in your instance**
+
+
+1. Get the 3D World repository & the OpenSFM repository.
 
 ```
-scp -i PATH-TO-KEY.pem PATH_TO_THIS_REPO/the_3d_world/ubuntu_setup.sh ubuntu@ec2-XX-XXX-XXX-XXX.compute-1.amazonaws.com:/home/ubuntu
+git clone https://github.com/unccv/the_3d_world.git
 ```
 
-where `XX-XXX-XXX-XXX` is the IP address of your instance. Note the dashes instead of dots. 
+```
+git clone --recursive https://github.com/mapillary/OpenSfM.git
+```
 
-2. After SSHing into your instance, run the setup script:
+2. Execute the setup script.
 
 ```
+
+cd ~/the_3d_world/util
 sudo bash ubuntu_setup.sh 
-```
-
-3. On your instance, clone OpenSFM to your machine:
 
 ```
-git clone https://github.com/mapillary/OpenSfM.git
-```
 
-4. Install requirements and build OpenSfM:
+
+3. Install requirements and build OpenSfM:
 
 ```
+cd ~/OpenSfM
 pip install -r requirements.txt
+pip install repoze.lru
 python setup.py build
 
 ```
@@ -63,21 +68,21 @@ python setup.py build
 5. Create a new OpenSfM data directory:
 
 ```
-cd OpenSfM/data
-mkdir objects
+cd ~/OpenSfM/data
+mkdir -p objects/images
 ```
 
-6. Move image to your instance from your local machine. If working with remote instance, could use SCP here again, as a test, you may want to move a set of brick/ball/cylinder images from the data directory:
+6. Copy images from the_3d_word repo to OpenSfM/data/images
 
 ```
-scp -i PATH-TO-KEY.pem -r PATH_TO_THIS_REPO/the_3d_world/data/objects ubuntu@ec2-54-145-215-211.compute-1.amazonaws.com:/home/ubuntu/OpenSfM/data/objects/images
+cp ~/the_3d_world/data/objects/* ~/OpenSfM/data/objects/images/
 
 ```
 
-7. Copy over an exampel config file. From the OpenSfM/data directory:
+7. Copy over an example config file. From the OpenSfM/data directory:
 
 ```
-cp berlin/config.yaml objects
+cp ~/OpenSfM/data/berlin/config.yaml objects
 ```
 
 8. Check out the yaml file. You'll need to make changes to this later:
@@ -92,7 +97,7 @@ nano config.yaml
 
 ```
 cd ~/OpenSfM
-bin/opensfm_run_all data/objects
+sudo bin/opensfm_run_all data/objects
 ```
 
 10. Enjoy watching OpenSfM do a bunch of work for you. 
@@ -108,6 +113,8 @@ python -m SimpleHTTPServer
 ```
 http://XX.XXX.XXX.XXX:8000/viewer/reconstruction.html#file=/data/objects/reconstruction.meshed.json
 ```
+
+where `XX-XXX-XXX-XXX` is the **Public** IP address of your instance. Note the dashes instead of dots.
 
 ### Jupyter Notebook from EC2
 You can also serve jupyter notebooks to your local machine from EC2s, [here's](https://medium.com/@alexjsanchez/python-3-notebooks-on-aws-ec2-in-15-mostly-easy-steps-2ec5e662c6c6) a guide. 

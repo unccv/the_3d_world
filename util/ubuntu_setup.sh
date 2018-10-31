@@ -40,11 +40,13 @@ rm -f /source/ceres-solver-1.14.0.tar.gz
 
 
 # Install opengv from source
+rm -rf /source/opengv
 mkdir -p /source && cd /source && \
 git clone https://github.com/paulinus/opengv.git && \
 cd /source/opengv && \
+git submodule update --init --recursive && \
 mkdir -p build && cd build && \
-cmake .. -DBUILD_TESTS=OFF -DBUILD_PYTHON=ON && \
+cmake .. -DBUILD_TESTS=OFF -DBUILD_PYTHON=ON -DPYBIND11_PYTHON_VERSION=2.7 && \
 make install && \
 cd / && \
 rm -rf /source/opengv
