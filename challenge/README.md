@@ -97,7 +97,7 @@ nano config.yaml
 
 ```
 cd ~/OpenSfM
-bin/opensfm_run_all data/objects
+sudo bin/opensfm_run_all data/objects
 ```
 
 10. Enjoy watching OpenSfM do a bunch of work for you. 
