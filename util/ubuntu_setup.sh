@@ -40,6 +40,7 @@ rm -f /source/ceres-solver-1.14.0.tar.gz
 
 
 # Install opengv from source
+rm -rf /source/opengv
 mkdir -p /source && cd /source && \
 git clone https://github.com/paulinus/opengv.git && \
 cd /source/opengv && \
