@@ -30,6 +30,9 @@ As a student, you should be eligable for [$35-$100](https://aws.amazon.com/blogs
 5. Follow Amazon instructions to access your instance via SSH.
 6. Create a new inbound rule under Security Groups for your instance. I've had good luck with allowing all traffic from all ports from my IP address. 
 
+### Microsoft Azure GPU Setup (Optional)
+Please check these instructions to setup a GPU on Microsoft Azure: https://docs.google.com/document/d/1q8pPkX9_UFQxBULWK1J8OR7Q1BTWPXlzqLlZzszlo_s/edit?usp=sharing
+
 ### Installation + Running on Ubuntu Linux
 
 **After SSHing into your instance, execute the following commands in your instance**
